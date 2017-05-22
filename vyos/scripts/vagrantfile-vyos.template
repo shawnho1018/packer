@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version ">= 1.6.2"
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "vyos"
+
+    config.vm.provider :virtualbox do |v, override|
+        v.customize ["modifyvm", :id, "--memory", 1024]
+        v.customize ["modifyvm", :id, "--cpus", 1]
+    end
+
+    config.vm.provider :vmware_fusion do |v, override|
+        #v.gui = true
+        v.vmx["memsize"] = "1024"
+        v.vmx["numvcpus"] = "1"
+        v.vmx["present"] = "TRUE"
+        v.vmx["ethernet0.startConnected"] = "TRUE"
+        v.vmx["ethernet0.virtualDev"] = "vmxnet3"
+        v.vmx["ethernet0.connectionType"] = "nat"
+        v.vmx['ethernet1.startConnected'] = "TRUE"
+        v.vmx['ethernet1.present'] = "TRUE"
+        v.vmx['ethernet1.connectionType'] = "nat"
+        v.vmx["ethernet1.virtualDev"] = "vmxnet3"
+        v.vmx['ethernet2.startConnected'] = "TRUE"
+        v.vmx['ethernet2.present'] = "TRUE"
+        v.vmx['ethernet2.connectionType'] = "hostonly"
+        v.vmx["ethernet2.virtualDev"] = "vmxnet3"      
+    end
+
+    config.vm.provider :vmware_workstation do |v, override|
+        #v.gui = true
+        v.vmx["memsize"] = "1024"
+        v.vmx["numvcpus"] = "1"
+        v.vmx["scsi0.virtualDev"] = "lsisas1068"
+        v.vmx["ethernet0.startConnected"] = "TRUE"
+        v.vmx["ethernet0.virtualDev"] = "vmxnet3"
+        v.vmx["ethernet0.connectionType"] = "nat"
+        v.vmx['ethernet1.startConnected'] = "TRUE"
+        v.vmx['ethernet1.present'] = "TRUE"
+        v.vmx['ethernet1.connectionType'] = "hostonly"
+        v.vmx["ethernet1.virtualDev"] = "vmxnet3"
+        v.vmx['ethernet2.startConnected'] = "TRUE"
+        v.vmx['ethernet2.present'] = "TRUE"
+        v.vmx['ethernet2.connectionType'] = "hostonly"
+        v.vmx["ethernet2.virtualDev"] = "vmxnet3"           
+    end
+end

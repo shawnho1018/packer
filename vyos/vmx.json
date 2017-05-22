@@ -1,0 +1,55 @@
+{
+  "builders": [{
+    "type":"vmware-vmx",
+    "source_path":"./VyOS-1.1.7-signed.vmwarevm/VyOS-1.1.7-signed.vmx",
+    "ssh_username": "vyos",
+    "ssh_password": "vyos",
+    "ssh_wait_timeout": "5m",
+    "shutdown_command": "sudo shutdown -h now",
+    "boot_wait":"2s",
+    "boot_command":[
+      "<wait><esc><wait><enter><wait10><wait10>",
+      "vyos<enter>vyos<enter><wait5>",
+      "configure<enter>",
+      "set interfaces ethernet eth0 address dhcp<enter>",
+      "set service ssh port '22'<enter>",
+      "commit<enter>",
+      "save<enter>"
+    ],
+    "vmx_data": {
+      "memsize": "2048",
+      "numvcpus": "1",
+      "scsi0.present":"true",
+      "scsi0.virtualDev": "lsisas1068",
+      "ethernet0.connectionType":"nat",
+      "ethernet0.virtualDev":"vmxnet3"
+      }
+    }],
+  "provisioners": [
+    {
+      "type":"file",
+      "source": "/Users/shawnho/.ssh/id_rsa.pub",
+      "destination": "/home/vyos/.ssh/authorized_keys"
+    },
+    {
+      "type":"shell",
+      "script": "scripts/configVyos.sh"
+    },
+    {
+      "type":"file",
+      "source": "scripts/configVyos.sh",
+      "destination": "/home/vyos/"
+    },
+    {
+      "type":"ansible",
+      "playbook_file":"scripts/configure.yml"
+    }
+  ],
+  "post-processors": [{
+    "type": "vagrant",
+    "keep_input_artifact": false,
+    "include": "/Users/shawnho/.ssh/id_rsa",
+    "output": "vyos117_{{.Provider}}.box",
+    "vagrantfile_template": "scripts/vagrantfile-vyos.template"
+  }]
+}

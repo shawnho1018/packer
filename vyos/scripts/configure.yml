@@ -1,0 +1,22 @@
+- hosts: all
+  connection: local
+  vars:
+    cli:
+      host: "{{ inventory_hostname }}"
+      username: vyos
+      password: vyos
+      transport: cli
+  tasks:
+#    - name: config vyos
+#      vyos_config:
+#        lines:
+#          - loadkey vyos /home/vyos/.ssh/authorized_keys
+#          - set interfaces etherent eth0 description "Set from Ansible"
+#        provider: "{{ cli }}"
+    - name: test linux command
+      shell: pwd
+    - name: test local bash script on remote machine
+      script: ../scripts/configLinux.sh
+# Failed to run vbash using Ansible. [todo]
+#    - name: test vbash script on remote machine
+#      script: ../scripts/configVyos.sh

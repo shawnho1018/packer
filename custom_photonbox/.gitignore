@@ -1,0 +1,6 @@
+# Git will ignore the following files
+*.iso
+*.box
+preload-sw/
+packer-cache/
+output-vagrant/

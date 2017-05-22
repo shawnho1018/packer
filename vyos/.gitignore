@@ -1,0 +1,4 @@
+*.box
+.DS_Store
+VyOS-1.1.7*\
+test\
